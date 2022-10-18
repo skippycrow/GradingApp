@@ -8,6 +8,7 @@
         placeholder="Points Deducted"
       />
       <button @click="removeItem(item.id)">x</button>
+      <hr />
     </template>
     <br />
     <button @click="addItem()">Add Line</button>
