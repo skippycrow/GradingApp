@@ -1,6 +1,7 @@
 <template>
   <div id="app" class='bg-gray-200'>
     <template v-for="item in lineItems" :key="item.id">
+    <input type='checkbox' v-model="item.isShown" />
       <input v-model="item.issue" type="text" placeholder="Problem Here" />
       <input
         v-model="item.amount"
@@ -28,10 +29,10 @@ export default {
   },
   setup() {
     let lineItems = ref([
-      { issue: 'sample', amount: -3, id: '1' },
-      { issue: 'This', amount: -3, id: '2' },
-      { issue: 'That', amount: -3, id: '3' },
-      { issue: '', amount: 0, id: '4' },
+      { isShown: true, issue: 'sample', amount: -3, id: '1' },
+      { isShown: true, issue: 'This', amount: -3, id: '2' },
+      { isShown: true, issue: 'That', amount: -3, id: '3' },
+      { isShown: true, issue: '', amount: 0, id: '4' },
     ])
     let msg = 'hello world'
 
@@ -42,7 +43,7 @@ export default {
 
       const max = Math.max(...ids)
 
-      lineItems.value.push({ issue: '', amount: 0, id: max })
+      lineItems.value.push({ isShown: true, issue: '', amount: 0, id: max })
     }
 
     const removeItem = (id) => {
@@ -52,9 +53,16 @@ export default {
 
     const prettyPrint = computed(() => {
       let str = ''
+      let sum = 0
       for (let item of lineItems.value) {
-        str += `${item.issue}: ${item.amount} \n`
+        if(item.isShown){
+
+          str += `${item.issue}: ${item.amount == 0 ? "-0": item.amount} \n`
+          sum += item.amount
+        }
+
       }
+      str += `\nTotal: ${sum == 0 ? '-0' : sum}`
       return str
     })
 
