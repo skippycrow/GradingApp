@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class='bg-gray-200'>
     <template v-for="item in lineItems" :key="item.id">
       <input v-model="item.issue" type="text" placeholder="Problem Here" />
       <input
@@ -55,7 +55,6 @@ export default {
       for (let item of lineItems.value) {
         str += `${item.issue}: ${item.amount} \n`
       }
-      console.log(str)
       return str
     })
 
