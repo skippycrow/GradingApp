@@ -1,20 +1,45 @@
 <template>
-  <div id="app" class='bg-gray-200'>
+  <div id="app" class="bg-gray-200">
+    <h1>Grading App</h1>
+    Total Score
+    <input class="form-control w-30" v-model="totalVal" />
+    <hr />
     <template v-for="item in lineItems" :key="item.id">
-    <input type='checkbox' v-model="item.isShown" />
-      <input v-model="item.issue" type="text" placeholder="Problem Here" />
-      <input
-        v-model="item.amount"
-        type="number"
-        placeholder="Points Deducted"
-      />
-      <button @click="removeItem(item.id)">x</button>
-      <hr />
+      <div class="row">
+        <div class="form-check col-1 mt-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            v-model="item.isShown"
+          />
+        </div>
+
+        <input
+          class="form-control col m-2"
+          v-model.trim="item.issue"
+          type="text"
+          placeholder="Problem Here"
+        />
+        <input
+          class="form-control col m-2"
+          v-model.number="item.amount"
+          type="number"
+          placeholder="Points Deducted"
+        />
+        <button class="btn btn-danger col-1 m-2" @click="removeItem(item.id)">
+          x
+        </button>
+      </div>
     </template>
     <br />
-    <button @click="addItem()">Add Line</button>
+    <button class="btn btn-primary me-2" @click="addItem()">Add Line</button>
+    <button class="btn btn-warning" @click="clearChecked()">
+      Clear Checked
+    </button>
     <br />
-    <textarea disabled>{{prettyPrint}}</textarea
+    <br />
+    <textarea rows="12" cols="60" disabled>{{ prettyPrint }}</textarea>
   </div>
 </template>
 
@@ -29,12 +54,14 @@ export default {
   },
   setup() {
     let lineItems = ref([
-      { isShown: true, issue: 'sample', amount: -3, id: '1' },
-      { isShown: true, issue: 'This', amount: -3, id: '2' },
-      { isShown: true, issue: 'That', amount: -3, id: '3' },
-      { isShown: true, issue: '', amount: 0, id: '4' },
+      { isShown: true, issue: 'for ) is for dweebs', amount: -5, id: '1' },
+      { isShown: true, issue: 'Double quotes', amount: -15, id: '2' },
+      { isShown: true, issue: 'Super Early Bird', amount: 5, id: '3' },
+      { isShown: false, issue: '', amount: 0, id: '4' },
     ])
     let msg = 'hello world'
+
+    const totalVal = ref(0)
 
     const addItem = () => {
       const ids = lineItems.value.map((object) => {
@@ -43,7 +70,11 @@ export default {
 
       const max = Math.max(...ids)
 
-      lineItems.value.push({ isShown: true, issue: '', amount: 0, id: max })
+      lineItems.value.push({ isShown: false, issue: '', amount: 0, id: max })
+    }
+
+    const clearChecked = () => {
+      lineItems.value.map((item) => (item.isShown = false))
     }
 
     const removeItem = (id) => {
@@ -51,18 +82,24 @@ export default {
       lineItems.value.splice(index, 1)
     }
 
+    const prefixNumber = (num) => {
+      if (num < 0) return num
+
+      if (num == 0) return '-0'
+
+      return `+${num}`
+    }
+
     const prettyPrint = computed(() => {
       let str = ''
       let sum = 0
       for (let item of lineItems.value) {
-        if(item.isShown){
-
-          str += `${item.issue}: ${item.amount == 0 ? "-0": item.amount} \n`
-          sum += item.amount
+        if (item.isShown) {
+          str += `${prefixNumber(item.amount)} ${item.issue} \n`
+          sum += Number(item.amount)
         }
-
       }
-      str += `\nTotal: ${sum == 0 ? '-0' : sum}`
+      str += `\n===\nTotal: ${Number(totalVal.value) + Number(sum)}`
       return str
     })
 
@@ -72,6 +109,8 @@ export default {
       addItem,
       removeItem,
       prettyPrint,
+      totalVal,
+      clearChecked,
     }
   },
 }
