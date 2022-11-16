@@ -14,18 +14,21 @@
             v-model="item.isShown"
           />
         </div>
+        <div class="col-2">
+          <input
+            class="form-control m-2"
+            :value="prefixNumber(item.amount)"
+            @change="(event) => (item.amount = Number(event.target.value))"
+            type="text"
+            placeholder="Points Deducted"
+          />
+        </div>
 
         <input
           class="form-control col m-2"
           v-model.trim="item.issue"
           type="text"
           placeholder="Problem Here"
-        />
-        <input
-          class="form-control col m-2"
-          v-model.number="item.amount"
-          type="number"
-          placeholder="Points Deducted"
         />
         <button class="btn btn-danger col-1 m-2" @click="removeItem(item.id)">
           x
@@ -111,6 +114,7 @@ export default {
       prettyPrint,
       totalVal,
       clearChecked,
+      prefixNumber,
     }
   },
 }
